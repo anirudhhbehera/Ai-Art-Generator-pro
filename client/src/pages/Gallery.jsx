@@ -7,6 +7,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
 
+const API = import.meta.env.VITE_API_URL;
+
 function Gallery() {
   const [arts, setArts] = useState([]);
   const [filteredArts, setFilteredArts] = useState([]);
@@ -19,7 +21,7 @@ function Gallery() {
 
   const fetchGallery = async () => {
     try {
-      const { data } = await axios.get('${import.meta.env.VITE_API_URL}/api/art/gallery');
+      const { data } = await axios.get(`${API}/api/art/gallery`);
       console.log('Gallery data:', data); // Debug log
       console.log('First art item:', data[0]); // Debug first item
       setArts(data);
@@ -181,7 +183,7 @@ function Gallery() {
 
   const handleLike = async (id) => {
     try {
-      const { data } = await axios.patch(`${import.meta.env.VITE_API_URL}/api/art/${id}/like`);
+      const { data } = await axios.patch(`${API}/api/art/${id}/like`);
       const updatedArts = arts.map(art => 
         art._id === id 
           ? { ...art, likes: (art.likes || 0) + 1, isLiked: !art.isLiked }
@@ -328,15 +330,15 @@ function Gallery() {
                 <Box sx={{ position: 'relative', overflow: 'hidden' }}>
                   <CardMedia
                     component="img"
-                    sx={{ height: { xs: 'auto', sm: 280 }, aspectRatio: { xs: '16/9', sm: 'auto' }, width: '100%', objectFit: 'cover' }}
                     image={art.imageUrl}
                     alt={art.prompt}
                     sx={{ 
+                      height: { xs: 'auto', sm: 280 },
+                      aspectRatio: { xs: '16/9', sm: 'unset' },
+                      width: '100%',
                       objectFit: 'cover',
                       transition: 'transform 0.4s ease',
-                      '&:hover': {
-                        transform: 'scale(1.1)'
-                      }
+                      '&:hover': { transform: 'scale(1.1)' }
                     }}
                   />
                   <Box

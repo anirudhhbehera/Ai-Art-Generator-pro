@@ -13,6 +13,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 
+const API = import.meta.env.VITE_API_URL;
+
 function ArtDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -31,14 +33,12 @@ function ArtDetail() {
 
   const fetchArtDetail = async () => {
     try {
-      // First try to get specific art detail
-      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/art/${id}`);
+      const { data } = await axios.get(`${API}/api/art/${id}`);
       setArt(data);
       setComments(data.comments || []);
     } catch (error) {
-      // If specific endpoint doesn't exist, get from gallery and find the art
       try {
-        const { data: galleryData } = await axios.get('${import.meta.env.VITE_API_URL}/api/art/gallery');
+        const { data: galleryData } = await axios.get(`${API}/api/art/gallery`);
         const foundArt = galleryData.find(art => art._id === id);
         if (foundArt) {
           setArt(foundArt);
@@ -53,10 +53,9 @@ function ArtDetail() {
 
   const handleLike = async () => {
     try {
-      const { data } = await axios.patch(`${import.meta.env.VITE_API_URL}/api/art/${id}/like`);
+      await axios.patch(`${API}/api/art/${id}/like`);
       setArt(prev => ({ ...prev, likes: (prev.likes || 0) + 1, isLiked: !prev.isLiked }));
     } catch (error) {
-      // Fallback: increment locally
       setArt(prev => ({ ...prev, likes: (prev.likes || 0) + 1, isLiked: !prev.isLiked }));
     }
   };
@@ -64,11 +63,8 @@ function ArtDetail() {
   const handleComment = async (e) => {
     e.preventDefault();
     if (!comment.trim() || !user) return;
-    
     try {
-      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/art/${id}/comment`, {
-        comment: comment.trim()
-      });
+      const { data } = await axios.post(`${API}/api/art/${id}/comment`, { comment: comment.trim() });
       setComments(data.comments);
       setComment('');
       setSnackbar({ open: true, message: 'Comment added successfully!', severity: 'success' });
@@ -90,11 +86,8 @@ function ArtDetail() {
 
   const handleDeleteComment = async () => {
     if (!selectedComment) return;
-    
     try {
-      const { data } = await axios.delete(
-        `${import.meta.env.VITE_API_URL}/api/art/${id}/comment/${selectedComment._id}`
-      );
+      const { data } = await axios.delete(`${API}/api/art/${id}/comment/${selectedComment._id}`);
       setComments(data.comments);
       setSnackbar({ open: true, message: 'Comment deleted!', severity: 'success' });
     } catch (error) {
@@ -123,11 +116,7 @@ function ArtDetail() {
   const handleShare = async () => {
     if (navigator.share) {
       try {
-        await navigator.share({
-          title: art.title,
-          text: art.prompt,
-          url: window.location.href,
-        });
+        await navigator.share({ title: art.title, text: art.prompt, url: window.location.href });
       } catch (error) {
         console.log('Error sharing:', error);
       }
@@ -160,67 +149,41 @@ function ArtDetail() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <Button
-          startIcon={<ArrowBackIcon />}
-          onClick={() => navigate(-1)}
-          sx={{ mb: 3, color: 'text.secondary' }}
-        >
+        <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mb: 3, color: 'text.secondary' }}>
           Back to Gallery
         </Button>
 
         <Box sx={{ display: 'flex', gap: 4, flexDirection: { xs: 'column', md: 'row' } }}>
-          {/* Image Section */}
           <Box sx={{ flex: 1 }}>
             <Card className="modern-card" sx={{ p: { xs: 1.5, sm: 2 } }}>
               <Box
                 sx={{
-                  position: 'relative',
-                  borderRadius: 3,
-                  overflow: 'hidden',
+                  position: 'relative', borderRadius: 3, overflow: 'hidden',
                   '&::before': {
-                    content: '""',
-                    position: 'absolute',
-                    inset: 0,
-                    padding: '3px',
+                    content: '""', position: 'absolute', inset: 0, padding: '3px',
                     background: 'linear-gradient(135deg, #a855f7, #ec4899, #f59e0b)',
                     borderRadius: 'inherit',
                     mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                    maskComposite: 'xor',
-                    WebkitMaskComposite: 'xor'
+                    maskComposite: 'xor', WebkitMaskComposite: 'xor'
                   }
                 }}
               >
-                <img
-                  src={art.imageUrl}
-                  alt={art.title}
-                  style={{
-                    width: '100%',
-                    height: 'auto',
-                    maxHeight: '600px',
-                    objectFit: 'contain',
-                    borderRadius: '9px'
-                  }}
-                />
+                <img src={art.imageUrl} alt={art.title} style={{ width: '100%', height: 'auto', maxHeight: '600px', objectFit: 'contain', borderRadius: '9px' }} />
               </Box>
             </Card>
           </Box>
 
-          {/* Details Section */}
           <Box sx={{ flex: 1 }}>
             <Card className="modern-card" sx={{ p: { xs: 2.5, sm: 4 }, height: 'fit-content' }}>
               <Typography variant="h3" sx={{ mb: 2, fontWeight: 700, fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' } }}>
                 {art.title || art.prompt?.split(' ').slice(0, 4).join(' ') + '...' || 'Untitled Artwork'}
               </Typography>
-              
+
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                 <Chip
                   icon={<PersonIcon />}
                   label={art.user?.username || 'Anonymous'}
-                  sx={{
-                    background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.2))',
-                    border: '1px solid rgba(168, 85, 247, 0.3)',
-                    fontWeight: 600
-                  }}
+                  sx={{ background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.2))', border: '1px solid rgba(168, 85, 247, 0.3)', fontWeight: 600 }}
                 />
               </Box>
 
@@ -230,45 +193,17 @@ function ArtDetail() {
 
               <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <IconButton
-                    onClick={handleLike}
-                    sx={{
-                      color: art.isLiked ? '#ff1744' : '#ffffff',
-                      fontSize: '2rem',
-                      '&:hover': {
-                        background: 'rgba(255, 255, 255, 0.1)',
-                        transform: 'scale(1.1)'
-                      }
-                    }}
-                  >
-                    <FavoriteIcon 
-                      sx={{ 
-                        fontSize: '2rem',
-                        color: art.isLiked ? '#ff1744' : '#ffffff'
-                      }} 
-                    />
+                  <IconButton onClick={handleLike} sx={{ color: art.isLiked ? '#ff1744' : '#ffffff', '&:hover': { background: 'rgba(255, 255, 255, 0.1)' } }}>
+                    <FavoriteIcon sx={{ fontSize: '2rem', color: art.isLiked ? '#ff1744' : '#ffffff' }} />
                   </IconButton>
                 </motion.div>
-                
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    variant="outlined"
-                    startIcon={<DownloadIcon />}
-                    onClick={handleDownload}
-                    sx={{ borderColor: 'rgba(168, 85, 247, 0.5)' }}
-                  >
+                  <Button variant="outlined" startIcon={<DownloadIcon />} onClick={handleDownload} sx={{ borderColor: 'rgba(168, 85, 247, 0.5)' }}>
                     Download
                   </Button>
                 </motion.div>
-                
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <IconButton
-                    onClick={handleShare}
-                    sx={{
-                      border: '1px solid rgba(168, 85, 247, 0.5)',
-                      color: '#a855f7'
-                    }}
-                  >
+                  <IconButton onClick={handleShare} sx={{ border: '1px solid rgba(168, 85, 247, 0.5)', color: '#a855f7' }}>
                     <ShareIcon />
                   </IconButton>
                 </motion.div>
@@ -276,7 +211,6 @@ function ArtDetail() {
 
               <Divider sx={{ mb: 3, borderColor: 'rgba(168, 85, 247, 0.2)' }} />
 
-              {/* Comments Section */}
               <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
                 Comments ({comments.length})
               </Typography>
@@ -285,22 +219,11 @@ function ArtDetail() {
                 <Box component="form" onSubmit={handleComment} sx={{ mb: 3 }}>
                   <Box sx={{ display: 'flex', gap: 2 }}>
                     <TextField
-                      fullWidth
-                      placeholder="Add a comment..."
-                      value={comment}
-                      onChange={(e) => setComment(e.target.value)}
-                      size="small"
-                      sx={{
-                        '& .MuiOutlinedInput-root': {
-                          background: 'rgba(255, 255, 255, 0.02)'
-                        }
-                      }}
+                      fullWidth placeholder="Add a comment..." value={comment}
+                      onChange={(e) => setComment(e.target.value)} size="small"
+                      sx={{ '& .MuiOutlinedInput-root': { background: 'rgba(255, 255, 255, 0.02)' } }}
                     />
-                    <IconButton
-                      type="submit"
-                      disabled={!comment.trim()}
-                      sx={{ color: '#a855f7' }}
-                    >
+                    <IconButton type="submit" disabled={!comment.trim()} sx={{ color: '#a855f7' }}>
                       <SendIcon />
                     </IconButton>
                   </Box>
@@ -315,9 +238,7 @@ function ArtDetail() {
                         <Avatar sx={{ width: 24, height: 24, mr: 1, fontSize: '0.8rem' }}>
                           {(comment.user?.username || 'U')[0].toUpperCase()}
                         </Avatar>
-                        <Typography variant="body2" fontWeight={600}>
-                          {comment.user?.username || 'Anonymous'}
-                        </Typography>
+                        <Typography variant="body2" fontWeight={600}>{comment.user?.username || 'Anonymous'}</Typography>
                       </Box>
                       {user && comment.user?._id === user._id && (
                         <IconButton size="small" onClick={(e) => handleMenuOpen(e, comment)}>
@@ -325,9 +246,7 @@ function ArtDetail() {
                         </IconButton>
                       )}
                     </Box>
-                    <Typography variant="body2" color="text.secondary">
-                      {comment.text}
-                    </Typography>
+                    <Typography variant="body2" color="text.secondary">{comment.text}</Typography>
                   </Box>
                 ))}
                 {comments.length === 0 && (
@@ -337,19 +256,13 @@ function ArtDetail() {
                 )}
               </Box>
 
-              {/* Comment Menu */}
               <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
                 <MenuItem onClick={handleDeleteComment} sx={{ color: 'error.main' }}>
                   <DeleteIcon sx={{ mr: 1, fontSize: 18 }} /> Delete
                 </MenuItem>
               </Menu>
 
-              {/* Snackbar */}
-              <Snackbar
-                open={snackbar.open}
-                autoHideDuration={3000}
-                onClose={() => setSnackbar({ ...snackbar, open: false })}
-              >
+              <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={() => setSnackbar({ ...snackbar, open: false })}>
                 <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
               </Snackbar>
             </Card>

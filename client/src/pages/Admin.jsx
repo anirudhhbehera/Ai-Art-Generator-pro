@@ -3,6 +3,8 @@ import { Container, Grid, Card, CardContent, Typography, Box, Button, Table, Tab
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 
+const API = import.meta.env.VITE_API_URL;
+
 function Admin() {
   const { user } = useAuth();
   const [stats, setStats] = useState({});
@@ -17,7 +19,7 @@ function Admin() {
 
   const fetchStats = async () => {
     try {
-      const { data } = await axios.get('${import.meta.env.VITE_API_URL}/api/admin/stats');
+      const { data } = await axios.get(`${API}/api/admin/stats`);
       setStats(data);
     } catch (error) {
       console.error('Failed to fetch stats');
@@ -26,7 +28,7 @@ function Admin() {
 
   const fetchUsers = async () => {
     try {
-      const { data } = await axios.get('${import.meta.env.VITE_API_URL}/api/admin/users');
+      const { data } = await axios.get(`${API}/api/admin/users`);
       setUsers(data);
     } catch (error) {
       console.error('Failed to fetch users');
@@ -35,7 +37,7 @@ function Admin() {
 
   const handleBanUser = async (userId) => {
     try {
-      await axios.patch(`${import.meta.env.VITE_API_URL}/api/admin/users/${userId}/ban`);
+      await axios.patch(`${API}/api/admin/users/${userId}/ban`);
       fetchUsers();
     } catch (error) {
       console.error('Failed to ban user');
