@@ -7,16 +7,16 @@ A full-stack web application that lets you generate stunning AI-powered artwork 
 ## 📸 Screenshots
 
 ### Home — Generate Art
-![Home Page](./images/Amazon%20Rain%20forest.jpg)
+![Home Page](./images/screenshot2.png)
 
 ### Community Gallery
-![Gallery](./images/screenshot2.png)
+![Gallery](./images/screenshot3.png)
 
 ### Art Detail & Comments
-![Art Detail](./images/screenshot3.png)
+![Art Detail](./images/screenshot4.png)
 
 ### Image Quality
-![Image Quality](./images/screenshot4.png)
+![Image Quality](./images/Amazon%20Rain%20forest.jpg)
 
 ---
 
