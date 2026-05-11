@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Environment variables
+.env
+.env.local
+
+# Build files
+client/dist/
+client/build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Images folder (keep folder, ignore generated art contents)
+images/*
+!images/.gitkeep
+!images/screenshot*.png
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
