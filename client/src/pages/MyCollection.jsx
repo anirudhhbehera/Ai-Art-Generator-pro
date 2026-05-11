@@ -34,7 +34,7 @@ function MyCollection() {
 
   const fetchMyCollection = async () => {
     try {
-      const { data } = await axios.get('http://localhost:5000/api/art/my-collection');
+      const { data } = await axios.get('https://ai-art-generator-qzt9.onrender.com/api/art/my-collection');
       setArts(data);
       setFilteredArts(data);
     } catch (error) {
@@ -197,7 +197,7 @@ function MyCollection() {
   const handleTogglePublish = async (art, e) => {
     e.stopPropagation();
     try {
-      const { data } = await axios.patch(`http://localhost:5000/api/art/${art._id}/toggle-publish`);
+      const { data } = await axios.patch(`https://ai-art-generator-qzt9.onrender.com/api/art/${art._id}/toggle-publish`);
       const updated = arts.map(a => a._id === art._id ? { ...a, isPublic: data.isPublic } : a);
       setArts(updated);
       setFilteredArts(prev => prev.map(a => a._id === art._id ? { ...a, isPublic: data.isPublic } : a));
@@ -247,7 +247,7 @@ function MyCollection() {
     }
     
     try {
-      const response = await axios.patch(`http://localhost:5000/api/art/${selectedArt._id}/title`, { title: editTitle.trim() });
+      const response = await axios.patch(`https://ai-art-generator-qzt9.onrender.com/api/art/${selectedArt._id}/title`, { title: editTitle.trim() });
       const updatedArts = arts.map(art => art._id === selectedArt._id ? { ...art, title: editTitle.trim() } : art);
       setArts(updatedArts);
       const updatedFilteredArts = filteredArts.map(art => art._id === selectedArt._id ? { ...art, title: editTitle.trim() } : art);
@@ -267,7 +267,7 @@ function MyCollection() {
     }
     
     try {
-      await axios.delete(`http://localhost:5000/api/art/${selectedArt._id}`);
+      await axios.delete(`https://ai-art-generator-qzt9.onrender.com/api/art/${selectedArt._id}`);
       const updatedArts = arts.filter(art => art._id !== selectedArt._id);
       setArts(updatedArts);
       setFilteredArts(updatedArts.filter(art => {

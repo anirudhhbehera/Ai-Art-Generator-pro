@@ -17,7 +17,7 @@ function Admin() {
 
   const fetchStats = async () => {
     try {
-      const { data } = await axios.get('http://localhost:5000/api/admin/stats');
+      const { data } = await axios.get('https://ai-art-generator-qzt9.onrender.com/api/admin/stats');
       setStats(data);
     } catch (error) {
       console.error('Failed to fetch stats');
@@ -26,7 +26,7 @@ function Admin() {
 
   const fetchUsers = async () => {
     try {
-      const { data } = await axios.get('http://localhost:5000/api/admin/users');
+      const { data } = await axios.get('https://ai-art-generator-qzt9.onrender.com/api/admin/users');
       setUsers(data);
     } catch (error) {
       console.error('Failed to fetch users');
@@ -35,7 +35,7 @@ function Admin() {
 
   const handleBanUser = async (userId) => {
     try {
-      await axios.patch(`http://localhost:5000/api/admin/users/${userId}/ban`);
+      await axios.patch(`https://ai-art-generator-qzt9.onrender.com/api/admin/users/${userId}/ban`);
       fetchUsers();
     } catch (error) {
       console.error('Failed to ban user');
