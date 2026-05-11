@@ -19,6 +19,7 @@ npm-debug.log*
 images/*
 !images/.gitkeep
 !images/screenshot*.png
+!images/*.jpg
 
 # OS files
 .DS_Store
