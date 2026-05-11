@@ -63,7 +63,7 @@ function Home() {
     setLoading(true);
     try {
       console.log('Sending to backend:', { title, prompt, style }); // Debug log
-      const { data } = await axios.post('https://ai-art-generator-qzt9.onrender.com/api/art/generate', { title, prompt, style });
+      const { data } = await axios.post('${import.meta.env.VITE_API_URL}/api/art/generate', { title, prompt, style });
       setGeneratedImage(data.imageUrl);
       setSnackbar({ open: true, message: 'Art generated successfully!', severity: 'success' });
     } catch (error) {
@@ -76,7 +76,7 @@ function Home() {
     if (!generatedImage || !user) return;
     try {
       const tagArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag);
-      await axios.post('https://ai-art-generator-qzt9.onrender.com/api/art/save', { title, prompt, imageUrl: generatedImage, style, tags: tagArray });
+      await axios.post('${import.meta.env.VITE_API_URL}/api/art/save', { title, prompt, imageUrl: generatedImage, style, tags: tagArray });
       setSnackbar({ open: true, message: 'Saved to My Art!', severity: 'success' });
       setTitle(''); setPrompt(''); setTags(''); setGeneratedImage(''); setStyle('default');
     } catch (error) {
@@ -88,7 +88,7 @@ function Home() {
     if (!generatedImage || !user) return;
     try {
       const tagArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag);
-      await axios.post('https://ai-art-generator-qzt9.onrender.com/api/art/publish', { title, prompt, imageUrl: generatedImage, style, tags: tagArray });
+      await axios.post('${import.meta.env.VITE_API_URL}/api/art/publish', { title, prompt, imageUrl: generatedImage, style, tags: tagArray });
       setSnackbar({ open: true, message: 'Published to Gallery & saved to My Art!', severity: 'success' });
       setTitle(''); setPrompt(''); setTags(''); setGeneratedImage(''); setStyle('default');
     } catch (error) {

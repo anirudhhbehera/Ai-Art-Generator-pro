@@ -19,7 +19,7 @@ function Gallery() {
 
   const fetchGallery = async () => {
     try {
-      const { data } = await axios.get('https://ai-art-generator-qzt9.onrender.com/api/art/gallery');
+      const { data } = await axios.get('${import.meta.env.VITE_API_URL}/api/art/gallery');
       console.log('Gallery data:', data); // Debug log
       console.log('First art item:', data[0]); // Debug first item
       setArts(data);
@@ -181,7 +181,7 @@ function Gallery() {
 
   const handleLike = async (id) => {
     try {
-      const { data } = await axios.patch(`https://ai-art-generator-qzt9.onrender.com/api/art/${id}/like`);
+      const { data } = await axios.patch(`${import.meta.env.VITE_API_URL}/api/art/${id}/like`);
       const updatedArts = arts.map(art => 
         art._id === id 
           ? { ...art, likes: (art.likes || 0) + 1, isLiked: !art.isLiked }

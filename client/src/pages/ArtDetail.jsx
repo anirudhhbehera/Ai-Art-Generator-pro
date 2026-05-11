@@ -32,13 +32,13 @@ function ArtDetail() {
   const fetchArtDetail = async () => {
     try {
       // First try to get specific art detail
-      const { data } = await axios.get(`https://ai-art-generator-qzt9.onrender.com/api/art/${id}`);
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/art/${id}`);
       setArt(data);
       setComments(data.comments || []);
     } catch (error) {
       // If specific endpoint doesn't exist, get from gallery and find the art
       try {
-        const { data: galleryData } = await axios.get('https://ai-art-generator-qzt9.onrender.com/api/art/gallery');
+        const { data: galleryData } = await axios.get('${import.meta.env.VITE_API_URL}/api/art/gallery');
         const foundArt = galleryData.find(art => art._id === id);
         if (foundArt) {
           setArt(foundArt);
@@ -53,7 +53,7 @@ function ArtDetail() {
 
   const handleLike = async () => {
     try {
-      const { data } = await axios.patch(`https://ai-art-generator-qzt9.onrender.com/api/art/${id}/like`);
+      const { data } = await axios.patch(`${import.meta.env.VITE_API_URL}/api/art/${id}/like`);
       setArt(prev => ({ ...prev, likes: (prev.likes || 0) + 1, isLiked: !prev.isLiked }));
     } catch (error) {
       // Fallback: increment locally
@@ -66,7 +66,7 @@ function ArtDetail() {
     if (!comment.trim() || !user) return;
     
     try {
-      const { data } = await axios.post(`https://ai-art-generator-qzt9.onrender.com/api/art/${id}/comment`, {
+      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/art/${id}/comment`, {
         comment: comment.trim()
       });
       setComments(data.comments);
@@ -93,7 +93,7 @@ function ArtDetail() {
     
     try {
       const { data } = await axios.delete(
-        `https://ai-art-generator-qzt9.onrender.com/api/art/${id}/comment/${selectedComment._id}`
+        `${import.meta.env.VITE_API_URL}/api/art/${id}/comment/${selectedComment._id}`
       );
       setComments(data.comments);
       setSnackbar({ open: true, message: 'Comment deleted!', severity: 'success' });
