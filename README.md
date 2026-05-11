@@ -9,6 +9,9 @@ A full-stack web application that lets you generate stunning AI-powered artwork 
 ### Home — Generate Art
 ![Home Page](./images/screenshot2.png)
 
+### Home — Generate Art Light Mode
+![Home Page](./images/screenshot5.png)
+
 ### Community Gallery
 ![Gallery](./images/screenshot3.png)
 
@@ -18,6 +21,8 @@ A full-stack web application that lets you generate stunning AI-powered artwork 
 ### Image Quality
 ![Image Quality](./images/Amazon%20Rain%20forest.jpg)
 
+### Admin Dashboard & Control
+![Art Detail](./images/screenshot6.png)
 ---
 
 ## ✨ Features
